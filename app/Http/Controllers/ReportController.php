@@ -166,14 +166,23 @@ class ReportController extends Controller
             return back()->with('error', 'Nomor WhatsApp belum diatur. Tambahkan WHATSAPP_BOSS_PHONE di file .env');
         }
 
-        $wa = new WhatsAppService();
-        
-        if ($wa->sendDailyReport($phone)) {
-            return back()->with('success', 'Laporan berhasil dikirim ke WhatsApp ' . $phone);
+        // Clean phone number
+        $phone = preg_replace('/\D/', '', $phone);
+        if (str_starts_with($phone, '0')) {
+            $phone = '62' . substr($phone, 1);
         }
 
-        return back()->with('error', 'Gagal mengirim laporan. Pastikan WHATSAPP_TOKEN sudah diatur di .env');
+        // Generate report message
+        $wa = new WhatsAppService();
+        $message = $wa->generateDailyReport();
+
+        // Create wa.me link
+        $waLink = 'https://wa.me/' . $phone . '?text=' . urlencode($message);
+
+        // Redirect to WhatsApp Web
+        return redirect()->away($waLink);
     }
+
 
     public function previewWhatsApp()
     {

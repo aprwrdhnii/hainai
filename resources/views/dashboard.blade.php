@@ -185,7 +185,7 @@
             </button>
         </div>
         
-        <form action="{{ route('reports.send-whatsapp') }}" method="POST">
+        <form action="{{ route('reports.send-whatsapp') }}" method="POST" target="_blank">
             @csrf
             <div class="mb-6">
                 <label class="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2">Nomor WA Bos</label>
